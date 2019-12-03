@@ -18,13 +18,15 @@ class NewFoodForm extends Component {
         return (
         <div>
             <p>todays date is {this.props.todaysDate}</p>
-
-            <select>
+            <form onSubmit = {e => this.props.handleEatenClick(e)}>
+            <select name ="eat">
                 {this.props.foods.map((food) => {
                     return(<option value={food.id}>{food.name}</option>)
                 })}
             </select>
-            <button value = "submit" onClick = {e => this.props.handleEatenClick(e)}>eat</button>
+            <button value = "submit" >eat</button>
+            </form>
+            
 
         </div>
         );
