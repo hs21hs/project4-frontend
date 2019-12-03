@@ -12,18 +12,19 @@ class NewFoodForm extends Component {
         })
       }
        
+    
      
     render(){
         return (
         <div>
+            <p>todays date is {this.props.todaysDate}</p>
 
-        
-            <form>
-            <label>new food</label>
-             <input type="text" onChange={event => this.handleFoodNameChange(event)} value={this.state.newFood} />
-            </form>
-
-            <button onClick= {this.makeFood}>submit</button>
+            <select>
+                {this.props.foods.map((food) => {
+                    return(<option value={food.id}>{food.name}</option>)
+                })}
+            </select>
+            <button value = "submit" onClick = {e => this.props.handleEatenClick(e)}>eat</button>
 
         </div>
         );
