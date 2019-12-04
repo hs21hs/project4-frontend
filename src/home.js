@@ -5,6 +5,7 @@ import Login from './components/login';
 import Logout from './components/logout';
 import DaysMeals from './components/daysMeals';
 import CreateFood from './components/createFood';
+import Chart from './components/chart';
 
 class Home extends Component {
 
@@ -14,6 +15,8 @@ class Home extends Component {
         currentDate: undefined,
         selectedDate: undefined,
         currentUserId: 0,
+        showChart: true,
+        weeksMeals: []
     
     }
 
@@ -43,6 +46,9 @@ componentDidMount(){
             this.setState({currentDate: date})
             this.setState({selectedDate: date})
             
+            fetch("http://localhost:3000//previous_weeks_meals")
+    .then(resp => resp.json())
+    .then(json => this.setState({weeksMeals: json}))
 
 }
 
@@ -54,7 +60,7 @@ eatFood = (e) => {
                   'Content-Type': 'application/json'
                 },
                 method: "POST",
-                body: JSON.stringify({eaten_card:{food_id: e.target.elements.eat.value, user_id: this.state.currentUserId}})
+                body: JSON.stringify({eaten_card:{food_id: e.target.elements.eat.value, user_id: this.state.currentUserId, date: this.state.currentDate}})
             })
             .then(resp => resp.json())
             .then(json => this.setState({eaten_cards:[...this.state.eaten_cards,json]}))
@@ -65,8 +71,11 @@ eatFood = (e) => {
 
 filteredMeals = () => {
     const filteredMeals =(this.state.eaten_cards.filter((meal) => {
-       const mealDateAr = meal.created_at.split("")
-       const formattedMealDate = (mealDateAr.slice(0,10)).join("")
+        // const mealDateAr = meal.created_at.split("")
+        // const formattedMealDate = (mealDateAr.slice(0,10)).join("")
+
+        
+       const formattedMealDate = meal.date
        
        return(formattedMealDate === this.state.selectedDate && meal.user_id === this.state.currentUserId)
    }))
@@ -129,6 +138,18 @@ updateMeal = (card)=>{
 }
 
 whichPage = () => {
+
+if (this.state.showChart === true && this.state.currentUserId !== 0){
+    return <div>
+        <button onClick = {()=>this.setState({showChart: false})}>day view</button>
+        <Chart weeksMeals = {this.state.weeksMeals.map((day) => {return day.filter((meal)=>{return meal.user_id===this.state.currentUserId})})} foods = {this.state.foods}/>
+        <p style={{color: "cyan"}}>calories</p>
+        <p style={{color: "purple"}}>protein</p>
+        <p style={{color: "red"}}>carbs</p>
+        <p style={{color: "green"}}>fat</p>
+    </div> 
+}
+
 if (this.state.currentUserId === 0){
     return(
         <div>
@@ -140,6 +161,7 @@ if (this.state.currentUserId === 0){
 }else{
     return(
     <div>
+        <button onClick = {()=>this.setState({showChart: true})}>week view</button>
         <Logout handleLogout = {this.handleLogout}/>
         <CreateFood handleCreate = {this.createFood}/>
         <NewFoodForm foods = {this.state.foods} handleEatenClick = {this.eatFood} todaysDate = {this.state.currentDate}/>

@@ -1,3 +1,17 @@
+Backend route /last_weeks_meals // previous 7 days
+[
+    {
+        burger
+    }
+]
+
+Frontend 
+link to a route /last_weeks_meals
+
+showing calories, carbs, protein, fat
+https://formidable.com/open-source/victory/gallery/victory-area-with-stroke
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
