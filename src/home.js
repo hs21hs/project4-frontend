@@ -6,7 +6,7 @@ import Logout from './components/logout';
 import DaysMeals from './components/daysMeals';
 import CreateFood from './components/createFood';
 import Chart from './components/chart';
-
+import { BrowserRouter as Router, Route, Switch} from 'react-router-dom'
 class Home extends Component {
 
     state = {users: [],
@@ -178,7 +178,15 @@ handleLogout = () => {
 
     render(){
         return (
-            this.whichPage()
+            <Router>
+                <div>
+                {this.whichPage()}
+                <Route 
+                path = "/chart" 
+                render = {(props) => <Chart {...props} weeksMeals = {this.state.weeksMeals.map((day) => {return day.filter((meal)=>{return meal.user_id===this.state.currentUserId})})} foods = {this.state.foods}/>}
+                />
+                </div>
+            </Router>
         );
     }
 }
